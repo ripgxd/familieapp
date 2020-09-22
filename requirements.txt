@@ -1,0 +1,17 @@
+asgiref==3.2.10
+certifi==2020.6.20
+chardet==3.0.4
+Django==3.1.1
+django-leaflet==0.27.1
+geographiclib==1.50
+geopy==2.0.0
+googlemaps==4.4.2
+idna==2.10
+pkg-resources==0.0.0
+psycopg2==2.8.6
+python-dateutil==2.8.1
+pytz==2020.1
+requests==2.24.0
+six==1.15.0
+sqlparse==0.3.1
+urllib3==1.25.10

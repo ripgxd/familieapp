@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block sign_elements %}
+
+    <div class="nav-item mr-3">
+        <a href="{% url 'index' %}">Головна</a>
+    </div>
+    
+    <div class="nav-item ml-3">
+      <a href="{% url 'generate' %}">Згенерувати</a>
+    </div>
+
+    <div class="nav-item ml-auto">
+        {{ user.username }}
+    </div>
+
+    <div class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}">Вийти</a>
+    </div>
+{% endblock sign_elements %}
+
+{% block content %}
+    {%load query_transform%}
+    <div class="container justify-center col-auto">
+        <div class="card">
+            <div class="card-body">
+
+              <div>
+                <form action="{% url  'search' %}" method="GET">
+                  <div class="input-group mb-3">
+                    <input type="text" placeholder="Ім'я" value="{% if name == None %}{% else %}{{name}}{% endif %}" class="form-control" name='name'>
+                    <input type="text" placeholder="Прізвище" value="{% if surname == None %}{% else %}{{surname}}{% endif %}" class="form-control" name='surname'>
+                    
+                    <select name="rel" class="browser-default custom-select">
+                      <option placeholder="Відношення" value="" selected>Відношення</option> 
+                      {% for rel in relations %}
+                      <option value="{{rel.id}}" {% if rel.id == relation.id %}selected{% endif %}>{{rel.relation}}</option>
+                      {% endfor %}
+                    </select>
+                    
+
+                    <input type="number" min="0" placeholder="від" value={{min}} name="min_age" class="form-control col-1">
+                    <input type="number" min="0" placeholder="до" value="{{max}}" name="max_age" class="form-control col-1">
+
+                    <input class="btn btn-primary" type="submit" value="search">
+                  </div>
+                </form>
+              </div>
+
+                <table class="table table-striped">
+                    <thead>
+                      
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Ім'я</th>
+                        <th scope="col">Прізвище</th>
+                        <th scope="col">Відношення</th>
+                        <th scope="col">Вік</th>
+                        <th scope="col">Місто</th>
+                        <th scope="col">point</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for familie in objects %}
+                      
+                      <tr>
+                        <th scope="row">{{familie.id}}</th>
+                        <td>{{familie.name}}</td>
+                        <td>{{familie.surname}}</td>
+                        <td>{{familie.relation}}</td>
+                        <td>{{familie.age}}</td>
+                        <td>{{familie.address}}</td>
+                          <td>{{familie.point}}}</td>
+                      </tr>
+                    
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                
+                  <div class="pagination m-4">
+                    <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?{% query_transform page=1 %}">&laquo; first</a>
+                        <a href="?{% query_transform page=page_obj.previous_page_number %}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                   
+                        <a href="?{% query_transform page=page_obj.next_page_number %}">next</a>
+                        <a href="?{% query_transform page=page_obj.paginator.num_pages %}">last &raquo;</a>
+                    {% endif %}
+                  </span>
+                </div>
+            </div>
+
+        <div>
+    {% load leaflet_tags %}
+    {% leaflet_js %}
+    {% leaflet_css %}
+        <div class="mb-5">{% leaflet_map "families" callback="window.map_init"%}</div>
+
+
+    <script>
+        function map_init(map){
+            {% for x in points %}
+                L.marker([{{ x.latitude }}, {{ x.longitude }}]).addTo(map);
+            {% endfor %}
+        }
+    </script>
+
+</div>
+</div>
+
+</div>
+
+{% endblock %}

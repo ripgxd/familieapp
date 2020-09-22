@@ -1,0 +1,39 @@
+{% extends  'base.html' %}
+
+
+{% block sign_elements %}
+    <div class="nav-item ml-auto">
+        <a class="nav-link" href="{% url 'sign-up' %}">Реєстрація</a>
+    </div>
+{% endblock sign_elements %}
+
+
+{% block content %}
+
+<div class="container justify-center col-4">
+    <div class="card">
+        <div class="card-body">
+        <h4 class="card-title">Log in to your account</h4>
+            <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            <div class="form-group ">
+                {{ form.username.label }}
+                {{ form.username }}
+            </div>
+
+            <div class="form-group ">
+                {{ form.password.label }}
+                {{ form.password }}
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block">Log in</button>
+            </div>
+            
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
